@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置</title>
+    <link rel="stylesheet" href="../css/setting.css">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+</head>
+
+<body>
+    <!-- 头部区域 -->
+    <header class="header">
+        <a href="../user.html">
+            <img src="../icons/back-left.png" alt="">
+        </a> 设置
+    </header>
+
+    <!-- 列表 -->
+    <div class="list">
+        <div class="listb">
+            <a href="#">
+                <div class="listbl">
+                    <span>账号与安全</span>
+                </div>
+                <div class="listbr">
+                    <img src="../icons/backr.png" alt="" class="tow">
+                </div>
+            </a>
+        </div>
+        <div class="listb">
+            <a href="#">
+                <div class="listbl">
+                    <span>隐私</span>
+                </div>
+                <div class="listbr">
+                    <img src="../icons/backr.png" alt="" class="tow">
+                </div>
+            </a>
+        </div>
+        <div class="listb">
+            <a href="#">
+                <div class="listbl">
+                    <span>通用</span>
+                </div>
+                <div class="listbr">
+                    <img src="../icons/backr.png" alt="" class="tow">
+                </div>
+            </a>
+        </div>
+        <div class="listb">
+            <a href="#">
+                <div class="listbl">
+                    <span>关于我们</span>
+                </div>
+                <div class="listbr">
+                    <img src="../icons/backr.png" alt="" class="tow">
+                </div>
+            </a>
+        </div>
+        <div class="listb">
+            <a href="#">
+                <div class="listbl">
+                    <span>帮助与反馈</span>
+                </div>
+                <div class="listbr">
+                    <img src="../icons/backr.png" alt="" class="tow">
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="t"><a href="../index.html">切换账号</a> </div>
+    <div class="t" onclick="esc()"><a href="#">退出</a></div>
+
+
+
+    <script src="../js/swiper.min.js"></script>
+    <script src="../js/flexible.js"></script>
+    <script>
+        //退出程序点击事件
+        function esc() {
+            if(confirm("确定退出？")){
+                plus.runtime.quit();
+            }
+            else{
+
+            }
+        }
+    </script>
+</body>
+
+</html>
