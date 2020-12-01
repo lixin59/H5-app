@@ -1,0 +1,89 @@
+body {
+    min-width: 320px;
+    max-width: 750px;
+    margin: 0 auto;
+    background-color: #f2f4f7;
+}
+
+a {
+    text-decoration: none;
+    color: #707070;
+}
+
+@media screen and (min-width: 750px) {
+    html {
+        font-size: 37.5px !important;
+    }
+}
+
+/* 头部样式 */
+.header {
+    height: 2.133333rem;
+    border-bottom: 1px solid #eaeaea;
+    text-align: center;
+    background-color: #fff;
+    line-height: 2.133333rem;
+    font-size: 0.933333rem;
+    color: #1c1c1c;
+}
+.header img{
+    width: 0.5rem;
+    height: 1rem;
+    position: fixed;
+    top: 0.566667rem;
+    left: 0.933333rem;
+}
+
+
+
+/* 列表信息样式 */
+.list{
+    border-top: 1.533333rem solid rgb(243, 242, 242);
+    height: 22.466667rem;
+    border-bottom: 0.266667rem solid rgb(243, 242, 242);
+}
+.listb{
+    height: calc(100% / 7);
+    background-color: white;
+    border-bottom: 0.026667rem solid darkgrey ;
+}
+.listb .listbl{
+    position: relative;
+    float: left;
+    height: 100%;
+    width: 50%;
+}
+.listb .listbr{
+    float: right;
+    height: 100%;
+    width: 50%;
+}
+.listb .one{
+    width: 1.833333rem;
+    height: 1.826667rem;
+    position: relative;
+    top: 0.8rem;
+    left: 0.4rem;
+}
+.listbl span{
+    font-size: 0.726667rem;
+    position: absolute;
+    top: 1.2rem;
+    left: 0.933333rem;
+}
+.listb .tow{
+    width: 0.5rem;
+    height: 1rem;
+    position: relative;
+    top: 0.926667rem;
+    left: 8.906667rem;
+}
+
+.t{
+    border-top: 0.533333rem solid rgb(243, 242, 242);
+    height: 3.466667rem;
+    background-color: white;
+    text-align: center;
+    line-height:3.466667rem;
+    font-size: 0.826667rem;
+}

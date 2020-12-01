@@ -1,0 +1,36 @@
+body {
+    min-width: 320px;
+    max-width: 750px;
+    margin: 0 auto;
+    background-color: #f2f4f7;
+}
+
+a {
+    text-decoration: none;
+    color: #707070;
+}
+
+@media screen and (min-width: 750px) {
+    html {
+        font-size: 37.5px !important;
+    }
+}
+
+
+.header {
+    height: 2.133333rem;
+    border-bottom: 1px solid #eaeaea;
+    text-align: center;
+    line-height: 2.133333rem;
+    font-size: 0.933333rem;
+    color: #1c1c1c;
+    background-color: #fff;
+}
+
+.header img{
+    width: 0.5rem;
+    height: 1rem;
+    position: fixed;
+    top: 0.566667rem;
+    left: 0.933333rem;
+}
