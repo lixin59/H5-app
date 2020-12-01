@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="frozen.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width = device-width,initial-scale = 1.0, maximum-scale = 1.0, user-scalable = 0" />
+    <script type="text/javascript" src="./js/vue.min.js"></script>
+    <link rel="stylesheet" href="./css/login.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <script src="./js/jQuery.js"></script>
+    <script src="./js/prefixfree.min.js"></script>
+
+
+
+</head>
+
+<body>
+    <div class="stars"></div>
+    
+    <div id="app" :style="appstyle">
+        <h1>{{onlode()}}</h1>
+
+        <!-- <img class="userimg" :src="imgsrc" :style="imgstyle"> -->
+        <section class="user_input_sec" :style="secstyle">
+
+            <div class="username_box">
+                <input id="loginName" class="username_input" type="text" name="" placeholder="邮箱/手机号/帐号"
+                    v-model="userinfo.username">
+            </div>
+            <div class="password_box">
+                <input id="loginPsd" class="password_input" type="password" name="" placeholder="请输入密码"
+                    v-model="userinfo.password">
+            </div>
+            <div class="submit_box">
+                <input class="submit_input" type="submit" name="" value="登录" onclick="login()" :style="loginbutstyle">
+            </div>
+
+            <div class="bot_text">
+                <div class="txt" id="t">登录即同意 <a href="#">《用户协议》</a> </div>
+                <br>
+                <a @click='regester()'>注册</a>
+
+            </div>
+        </section>
+        <div class="tiao" id="hide"><a href="./index1.html">跳过登录 下次再说!!!</a></div>
+
+    </div>
+
+
+    <script>
+        /**
+         * 其他说明：
+         * 1.全局变量使用var，var定义的变量可以修改，可以不用初始化
+         * 2.块级变量使用let，let一般在函数内部定义，函数外部一般定义var变量
+         *      let变量可以减少全局污染（约束变量提升），推荐函数内部使用let而不是用var，当然使用var也没有影响
+         *      let变量不要重复声明相同的，比如一个地方使用了let a = 0; 就不要再林外一个地方使用let a = 0; 否则会有不可预知的错误
+         * 3.const变量，let变量的规则均适用于const，使用const变量除了应当遵循let的规则以外，还需要遵循以下规则：
+         *         1.const声明的变量不能重新赋值
+         *         2.const声明的变量必须初始化（声明后必须立即初始化）
+         * 4.尽量把var，let，const这三种变量分开，不建议一直使用var，这样不好，具体原因自己百度，这里不阐述
+         * 5.var，let，const的级别为var>let>const
+         * 6.数据层次一定，数据过多，不建议直接for循环，对性能的影响微乎其微，但是有影响
+         */
+        $(function () {
+            $('#loginName,#loginPsd').focus(function () {
+                // console.log('1');
+                $('#hide').css('display', 'none');
+            })
+            .blur(function () {
+                // console.log('2');
+                $('#hide').css('display', 'block');
+            });
+        })
+
+
+
+
+        /**
+         * 登录的主方法
+         */
+        function login() {
+            if (isNone()) {
+                if (localStorage.user) {
+                    // 从localStorage取出键为user的数据模型
+                    arr = eval(localStorage.user);
+                    let k = 0;
+                    // 循环取出，可用其他方法代理，数据量多的情况下，不建议使用for循环
+                    for (e in arr) {
+                        // 判断用户名，密码是否和localStorage中的数据一致，兼容性写法必须添加trim(),不需要兼容可以不写
+                        if ($('#loginName').val().trim() == arr[e].loginName) {
+                            var user = $('#loginName').val().trim()
+                            console.log(user);
+                            if ($('#loginPsd').val().trim() == arr[e].loginPsd) {
+                                alert('登录成功');
+                                var psd = $('#loginPsd').val().trim()
+                                const nowuser = {
+                                    'Name': user,
+                                    'Psd': psd
+                                };
+                                // 添加数据
+                                arr.push(nowuser);
+                                localStorage.nowuser = JSON.stringify(arr);
+
+                                // 成功后清除用户名和密码
+                                clear();
+                                k = 0;
+                                window.location.href = "index1.html"; //登录成功后跳转到首页
+                                // 成功之后对整个登录页面ID为web的部分重新换为成功的标识（也可以选择跳转到成功页面）
+                                // $("#web").html("<span style='color: blue;'>登录成功【success】</span>");
+
+                                return;
+                            } else {
+                                alert('密码错误');
+                                // 失败后清除用户名和密码
+                                clear();
+                                k = 0;
+                                return;
+                            }
+                        } else {
+                            k = 1;
+                        }
+                    }
+                    if (k == 1) {
+                        alert('用户名不存在');
+                        clear();
+                    }
+                } else {
+                    alert('用户名不存在，是否注册？');
+                    // window.location.href = "register.html";
+                    clear();
+                }
+            }
+        }
+
+        /**
+         * 清空数据
+         * 等同于
+         * document.getElementById("loginName").value="";
+         * document.getElementById("loginPsd").value="";
+         */
+        function clear() {
+            $('#loginName').val('');
+            $("#loginPsd").val('');
+        }
+
+        /**
+         * 登录的验证方法
+         * 是否为空的判断
+         */
+        function isNone() {
+            if ($('#loginName').val().trim() == "") {
+                alert('用户名不能为空');
+                return false;
+            } else if ($('#loginPsd').val().trim() == "") {
+                alert('密码不能为空');
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            appstyle: 'height:500px;',
+            scrheight: 0,
+            secstyle: '',
+            imgstyle: '',
+            loginbutstyle: '',
+            userinfo: [{
+                    username: '',
+                },
+                {
+                    password: '',
+                }
+
+            ],
+            imgsrc: './images/tou.png',
+        },
+        methods: {
+            onlode: function () {
+
+                if (this.scrheight == 0) //防止弹出键盘改变尺寸
+                {
+                    this.scrheight = document.documentElement.clientHeight;
+                    //android.postheight(this.scrheight);
+                }
+
+                this.appstyle = 'height:' + this.scrheight + "px;";
+                this.secstyle = 'top:' + this.scrheight / 3 + "px;";
+                this.imgstyle = 'top:' + this.scrheight / 18 + "px;" + 'width:' + this.scrheight / 5 +
+                    "px;" + 'height:' + this.scrheight / 5 + "px;" + 'margin-left:-' + this.scrheight / 10 +
+                    "px;";
+            },
+            login: function () {
+                // android.login(this.userinfo.username, this.userinfo.password);
+
+
+            },
+            regester: function () {
+                // android.regester();
+                window.location.href = "./register.html";
+            }
+        }
+
+    })
+</script>
