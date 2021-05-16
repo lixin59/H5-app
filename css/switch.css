@@ -1,0 +1,41 @@
+ /* Switch开关样式 */
+ /* 必须是input为 checkbox class 添加 switch 才能实现以下效果 */
+ input[type='checkbox'].switch{
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    width: 3rem;
+    height: 1.66rem;
+    background: #ccc;
+    border-radius: 20px;
+    transition: border-color .3s, background-color .3s;
+    box-sizing: border-box;
+}
+
+input[type='checkbox'].switch::after {
+    content: '';
+    display: inline-block;
+    width: 1.5rem;
+    height:1.5rem;
+    border: 1px solid rgb(150, 145, 145);
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0, 0, 2px, #999;
+    transition:.4s;
+    /* top: 0.053333rem; */
+    position: absolute;
+    left: 0.053333rem;
+}
+
+input[type='checkbox'].switch:checked {
+    background: rgb(10, 226, 28);
+}
+/* 当input[type=checkbox]被选中时：伪元素显示下面样式 位置发生变化 */
+input[type='checkbox'].switch:checked::after {
+    content: '';
+    position: absolute;
+    left: 48%;
+    /* top: 0.053333rem; */
+}

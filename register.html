@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="frozen.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width = device-width,initial-scale = 1.0, maximum-scale = 1.0, user-scalable = 0" />
+    <script type="text/javascript" src="./js/vue.min.js"></script>
+    <link rel="stylesheet" href="./css/register.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <script src="./js/jQuery.js"></script>
+    <script src="./js/prefixfree.min.js"></script>
+
+</head>
+
+<body>
+    <div class="stars"></div>
+    <div id="app" :style="appstyle">
+        <h1>{{onlode()}}</h1>
+
+        <!-- <img class="userimg" :src="imgsrc" :style="imgstyle"> -->
+        <section class="user_input_sec" :style="secstyle">
+
+            <div class="username_box">
+                <input id="loginName" class="username_input" type="text" name="" placeholder="邮箱/手机号/帐号">
+            </div>
+            <div class="password_box">
+                <input id="loginPsd" class="password_input" type="password" name="" placeholder="请输入密码"
+                    >
+            </div>
+            <div class="password_box1">
+                <input id="loginPsd2" class="password_input1" type="password" name="" placeholder="请确认输入密码"
+                    >
+            </div>
+            <div class="submit_box" >
+                <input class="submit_input" type="submit" name="" value="注册"  :style="loginbutstyle" onclick="register()" >
+            </div>
+
+            <div class="bot_text">
+                <div class="txt">登录即同意 <a href="#">《用户协议》</a> </div>
+                <br>
+                <a @click='login()'>登录</a>
+
+            </div>
+        </section>
+
+        <div class="tiao" id="hide"><a href="./index1.html">跳过登录 下次再说!!!</a></div>
+
+    </div>
+
+
+
+</body>
+
+</html>
+
+<script>
+    $(function () {
+            $('#loginName,#loginPsd,#loginPsd2').focus(function () {
+                console.log('1');
+                $('#hide').css('display', 'none');
+            })
+            .blur(function () {
+                console.log('2');
+                $('#hide').css('display', 'block');
+            });
+        })
+    /**
+     * 注册的主方法
+     */
+    function register() {
+        if(isNone()) {
+            // 定义一个空数组
+            let arr = [];
+            if(localStorage.user) {
+                arr = eval(localStorage.user);
+                for(e in arr) {
+                    // 取出数据判断是否注册过
+                    if($('#loginName').val().trim() == arr[e].loginName) {//$.trim() 函数用于去除字符串两端的空白字符。
+                        alert('该账号已被注册');
+                        clear();
+                        return;
+                    }
+                }
+            }
+            const user = {
+                'loginName': $("#loginName").val(),
+                'loginPsd': $("#loginPsd").val()
+            };
+            // 添加数据
+            arr.push(user);
+            localStorage.user = JSON.stringify(arr);
+            alert('注册成功');
+            window.location.href="./index.html";
+            clear();
+        }
+    }
+    
+    /**
+     * 清空数据
+     * 等同于
+     * document.getElementById("loginName").value="";
+     * document.getElementById("loginPsd").value="";
+     */
+    function clear() {
+        $('#loginName').val('');
+        $("#loginPsd").val('');
+        $("#loginPsd2").val('');
+    }
+    
+    /**
+     * 注册的验证方法
+     * 是否为空的判断
+     * 两次密码是否相等的判断
+     */
+    function isNone() {
+        if($('#loginName').val().trim() == "") {
+            alert('用户名不能为空');
+            return false;
+        } else if($('#loginPsd').val().trim() == "") {
+            alert('密码不能为空');
+            return false;
+        } else if($('#loginPsd').val().trim() != $('#loginPsd2').val().trim()) {
+            alert('两次密码不一致，请检查！');
+            return false;
+        }
+        return true;
+    }
+</script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            appstyle: 'height:500px;',
+            scrheight: 0,
+            secstyle: '',
+            imgstyle: '',
+            loginbutstyle: '',
+            userinfo: [{
+                    username: '',
+                },
+                {
+                    password: '',
+                },
+                {
+                    password1: '',
+                }
+
+            ],
+            imgsrc: './images/tou.png',
+        },
+        methods: {
+            onlode: function () {
+
+                if (this.scrheight == 0) //防止弹出键盘改变尺寸
+                {
+                    this.scrheight = document.documentElement.clientHeight;
+                   // android.postheight(this.scrheight);
+                }
+
+                this.appstyle = 'height:' + this.scrheight + "px;";
+                this.secstyle = 'top:' + this.scrheight / 3 + "px;";
+                this.imgstyle = 'top:' + this.scrheight / 18 + "px;" + 'width:' + this.scrheight / 5 +
+                    "px;" + 'height:' + this.scrheight / 5 + "px;" + 'margin-left:-' + this.scrheight / 10 +
+                    "px;";
+            },
+            login: function () {
+               // android.login(this.userinfo.username, this.userinfo.password);
+               window.location.href = "./index.html";
+
+
+            },
+            // regester: function () {
+            //     //android.regester();
+            // }
+        }
+
+    })
+</script>

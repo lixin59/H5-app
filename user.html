@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的</title>
+    <link rel="stylesheet" href="./css/user.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/swiper.min.css">
+
+</head>
+
+<body>
+    <!-- 头部区域 -->
+    <header class="header">我的首页</header>
+    <!-- 个人信息 -->
+    <div class="personal">
+        <a href="./user/information.html">
+            <div class="pl">
+                <img src="./images/ldh.jpg" alt="">
+            </div>
+            <div class="pr">
+                <!-- <div class="username">小明</div> -->
+                <div class="number" id="user">账号：123456</div>
+            </div>
+        </a>
+    </div>
+    <!-- 列表 -->
+    <div class="list">
+        <div class="listb">
+            <a href="#">
+                <div class="listbl">
+                    <img src="./icons/shebei.png" alt="" class="one">
+                    <span>我的智能设备</span>
+                </div>
+                <div class="listbr">
+                    <img src="./icons/backr.png" alt="" class="tow">
+                </div>
+            </a>
+        </div>
+        <div class="listb">
+            <a href="./user/gps.html">
+                <div class="listbl">
+                    <img src="./icons/dw.png" alt="" class="one">
+                    <span>位置定位</span>
+                </div>
+                <div class="listbr">
+                    <img src="./icons/backr.png" alt="" class="tow">
+                </div>
+            </a>
+        </div>
+        <div class="listb">
+            <a href="./user/setting.html">
+                <div class="listbl">
+                    <img src="./icons/set.png" alt="" class="one">
+                    <span>设置</span>
+                </div>
+                <div class="listbr">
+                    <img src="./icons/backr.png" alt="" class="tow">
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer class="footer">
+        <a href="./index1.html" class="item">
+            <img src="./icons/home.png" alt="" />
+            <p>首页</p>
+        </a>
+        <a href="./history.html" class="item">
+            <img src="./icons/net.png" alt="" />
+            <p>历史数据</p>
+        </a>
+        <a href="#" class="item">
+            <img src="./icons/user2.png" alt="" />
+            <p style="color: rgb(11, 194, 194);">我的</p>
+        </a>
+    </footer>
+    <script src="./js/swiper.min.js"></script>
+    <script src="./js/flexible.js"></script>
+    <script src="./js/jQuery.js"></script>
+    <script>
+         $(function(){
+             var data =JSON.parse(localStorage.nowuser)
+             var nowuser = data.slice(-1)
+             var name = nowuser[0].Name
+             $("#user").text('账号：'+name);
+            // console.log(name);
+        })
+    </script>
+</body>
+
+</html>

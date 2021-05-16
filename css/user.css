@@ -1,0 +1,143 @@
+body {
+    min-width: 320px;
+    max-width: 750px;
+    margin: 0 auto;
+    background-color: #f2f4f7;
+}
+
+a {
+    text-decoration: none;
+    color: #707070;
+}
+
+@media screen and (min-width: 750px) {
+    html {
+        font-size: 37.5px !important;
+    }
+}
+
+/* 头部样式 */
+.header {
+    height: 2.133333rem;
+    border-bottom: 1px solid #eaeaea;
+    text-align: center;
+    background-color: #fff;
+    line-height: 2.133333rem;
+    font-size: 0.933333rem;
+    color: #1c1c1c;
+}
+
+/* 个人 */
+.personal{
+    height: 5rem;
+    width: 100%;
+    padding: 0.633333rem;
+    background-color: #fff;
+    border-bottom: 0.026667rem solid #ccc;
+}
+
+.personal .pl{
+    float: left;
+    width: 25%;
+    height: 100%;
+}
+.personal .pr{
+    float: right;
+    width: 75%;
+    height: 100%;
+}
+.personal img {
+    width: 3.706667rem;
+    height: 3.706667rem;
+}
+.personal .pr>.username{
+    height: 30%;
+    font-size: 0.922rem;
+    margin: 0.533333rem 0;
+    color: rgb(53, 53, 53);
+}
+.personal .pr>.number{
+    height: 30%;
+    font-size: 0.922rem;
+    margin: 0.533333rem 0;
+}
+
+
+
+
+
+
+/* 列表信息样式 */
+.list{
+    border-top: 1.533333rem solid rgb(243, 242, 242);
+    height: 17.466667rem;
+    border-bottom: 0.266667rem solid rgb(243, 242, 242);
+}
+
+.listb{
+    height: calc(100% / 5);
+    background-color: white;
+    border-bottom: 0.026667rem solid darkgrey ;
+}
+.listb .listbl{
+    position: relative;
+    float: left;
+    height: 100%;
+    width: 50%;
+}
+.listb .listbr{
+    float: right;
+    height: 100%;
+    width: 50%;
+}
+.listb .one{
+    width: 1.833333rem;
+    height: 1.826667rem;
+    position: relative;
+    top: 0.8rem;
+    left: 0.4rem;
+}
+.listb span{
+    font-size: 0.726667rem;
+    position: absolute;
+    top: 1.2rem;
+    left: 2.6rem;
+}
+.listb .tow{
+    width: 0.5rem;
+    height: 1rem;
+    position: relative;
+    top: 0.926667rem;
+    left: 8.906667rem;
+}
+/* 底部样式 */
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 2.933333rem;
+    width: 100%;
+    z-index: 99999;
+    display: flex;
+    padding: 0.533333rem;
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+}
+
+.footer .item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer .item img {
+    width: 1.04rem;
+    height: 1.093333rem;
+}
+
+.footer .item p {
+    font-size: 0.586667rem;
+    color: #666666;
+    margin-top: 0.266667rem;
+}

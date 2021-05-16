@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智能办公室</title>
+  <script type="text/javascript">
+    document.addEventListener('plusready', function () {
+      //console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。")
+    });
+  </script>
+  <link rel="stylesheet" href="./css/switch.css">
+  <link rel="stylesheet" href="./css/normalize.css" />
+  <!-- 先引入css文件 放到自己css文件的上面 -->
+  <link rel="stylesheet" href="./css/swiper.min.css" />
+  <link rel="stylesheet" href="./css/index1.css" />
+</head>
+
+<body>
+  <!-- 头部区域 -->
+  <header class="header">首页</header>
+  <div class="wrapper" id="app">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <span>{{province}}</span>
+        <span>{{city}}</span>
+      </div>
+      <div class="header-text">
+        <span>风向: {{win}} {{windpower}}</span>
+        <span>{{weather}}</span>
+      </div>
+      <div class="weather-advice">天气数据更新时间: {{reporttime}}</div>
+    </div>
+    <div class="body-wrapper">
+      <div class="body" id="app1">
+        <div class="data-wrapper">
+          <div class="data">
+            <img class="data-logo" src="./images/wendu.png" />
+            <div class="data-text">
+              <div class="data-title">温度</div>
+              <div class="data-value" id="temp">{{tem}}℃</div>
+            </div>
+          </div>
+          <div class="data">
+            <img class="data-logo" src="./images/shidu.png" />
+            <div class="data-text">
+              <div class="data-title">湿度</div>
+              <div class="data-value" id="hum">{{hum}}%</div>
+            </div>
+          </div>
+        </div>
+        <div class="data-wrapper">
+          <div class="data">
+            <img class="data-logo" src="./images/guang.png" />
+            <div class="data-text">
+              <div class="data-title">光照度</div>
+              <div class="data-value" id="lux">{{lux}}Lux</div>
+            </div>
+          </div>
+          <div class="data">
+            <img class="data-logo" src="./images/wled.png" />
+            <div class="data-text">
+              <div class="data-title">照明灯</div>
+              <div class="data-value">
+                <input type="checkbox" class="switch" id="kt">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="data-wrapper">
+          <div class="data">
+            <img class="data-logo" src="./images/woled.png" />
+            <div class="data-text">
+              <div class="data-title">补光灯</div>
+              <div class="data-value">
+                <input type="checkbox" class="switch" id="ws">
+              </div>
+            </div>
+          </div>
+          <div class="data">
+            <img class="data-logo" src="./images/feng.png" />
+            <div class="data-text">
+              <div class="data-title">电风扇</div>
+              <div class="data-value">
+                <input type="checkbox" class="switch" id="fs">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="allmap"></div>
+  <footer class="footer">
+    <a href="#" class="item">
+      <img src="./icons/home2.png" alt="" />
+      <p style="color: rgb(11, 194, 194);">首页</p>
+    </a>
+    <a href="./history.html" class="item">
+      <img src="./icons/net.png" alt="" />
+      <p>历史数据</p>
+    </a>
+    <a href="./user.html" class="item">
+      <img src="./icons/user.png" alt="" />
+      <p>我的</p>
+    </a>
+  </footer>
+
+
+  <script src="./js/flexible.js"></script>
+  <script src="./js/swiper.min.js"></script>
+  <script src="./js/jQuery.js"></script>
+  <script src="./js/sdk.js"></script>
+  <script type="text/javascript" src="./js/vue.js"></script>
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=64f66e310c58fdc368787ace68723ddd">
+  </script>
+
+  <script type="text/javascript">
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        province: '请求中', //省
+        city: '请求中', //城市
+        airText: '请求中', //空气优良
+        weather: '请求中', //天气
+        reporttime: '请求中', //当前日期
+        win: '请求中', //风向
+        windpower: '请求中', //风力等级
+        tem:'',//温度
+        hum:'',//湿度
+        lux:'',//光照强度
+      },
+      mounted() {
+        this.init()
+      },
+      methods: {
+        init() {
+          let that = this
+          var map = new AMap.Map('container', {
+            resizeEnable: true
+          });
+          AMap.plugin('AMap.Geolocation', function () {
+            var geolocation = new AMap.Geolocation({
+              enableHighAccuracy: false, //是否使用高精度定位，默认:true
+              timeout: 10000, //超过10秒后停止定位，默认：5s
+            });
+            geolocation.getCurrentPosition(function (status, result) {
+              if (status == 'complete') {
+                onComplete(result)
+              } else {
+                onError(result)
+              }
+            });
+          });
+          //解析定位结果
+          function onComplete(data) {
+            console.log(data.position);
+            var lat = data.position.lat
+            var lng = data.position.lng
+            console.log(lng, lat);
+            $.ajax({ //请求位置
+              type: "get",
+              dataType: "jsonp",
+              async: false,
+              url: 'https://restapi.amap.com/v3/geocode/regeo?output=json&location=' + lng + ',' + lat +
+                '&key=4cd49cf6a0287319781b93249e809d15', //高德地图api
+              // url:'https://v0.yiketianqi.com/api?version=v61&appid=31143983&appsecret=VisL2wEO&cityid=350782003000',
+              // url:'https://v0.yiketianqi.com/api?version=v61&appid=31143983&appsecret=VisL2wEO&city=武夷山',
+              // url:'http://api.map.baidu.com/reverse_geocoding/v3/?ak=OsxPdYYCZlnhoar9L42cbLvzXxHYi6aR&output=json&coordtype=wgs84ll&location=27.72579,118.00077',//百度地图api
+              success: function (data) {
+                console.log("位置信息请求成功");
+                console.log(data);
+                var adcode = data.regeocode.addressComponent.adcode
+                console.log(adcode);
+                $.ajax({ //根据城市编码查询天气信息
+                  type: "get",
+                  dataType: "jsonp",
+                  async: false,
+                  url: 'https://restapi.amap.com/v3/weather/weatherInfo?city=' + adcode +
+                    '&key=4cd49cf6a0287319781b93249e809d15', //高德地图天气查询
+                  success: function (data) {
+                    console.log("天气信息请求成功");
+                    console.log(data);
+                    var datas = data.lives[0]
+                    that.province = datas.province
+                    that.city = datas.city
+                    that.weather = datas.weather
+                    that.win = datas.winddirection
+                    that.windpower = datas.windpower
+                    that.reporttime = datas.reporttime
+                  },
+                  error: function (err) {
+                    console.log("这是请求失败的");
+                  }
+                })
+              },
+              error: function (err) {
+                console.log("这是请求失败的");
+              }
+            })
+          }
+          //解析定位错误信息
+          function onError(data) {
+            alert('定位失败')
+            alert('启动模糊定位')
+            var adcode = map.getAdcode()
+          $.ajax({ //根据城市编码查询天气信息
+                  type: "get",
+                  dataType: "jsonp",
+                  async: false,
+                  // url: 'https://restapi.amap.com/v3/weather/weatherInfo?city=' + adcode +
+                  //   '&key=4cd49cf6a0287319781b93249e809d15', //高德地图天气查询
+                  url: `http://testing.hongyangcloud.com/hr/newbaby/getnewbabydanganbyid?id=e786d105-ffba-4ec4-9058-6677971ea3ac`,
+                  success: function (data) {
+                    console.log("天气信息请求成功");
+                    console.log(data);
+                    var datas = data.lives[0]
+                    that.province = datas.province
+                    that.city = datas.city
+                    that.weather = datas.weather
+                    that.win = datas.winddirection
+                    that.windpower = datas.windpower
+                    that.reporttime = datas.reporttime
+                  },
+                  error: function (err) {
+                    console.log("这是请求失败的");
+                  }
+                })
+          }
+
+
+          // var map = new AMap.Map('container', {
+          //   resizeEnable: true
+          // });
+          // var adcode = map.getAdcode()
+          // $.ajax({ //根据城市编码查询天气信息
+          //         type: "get",
+          //         dataType: "jsonp",
+          //         async: false,
+          //         url: 'https://restapi.amap.com/v3/weather/weatherInfo?city=' + adcode +
+          //           '&key=4cd49cf6a0287319781b93249e809d15', //高德地图天气查询
+          //         success: function (data) {
+          //           console.log("天气信息请求成功");
+          //           console.log(data);
+          //           var datas = data.lives[0]
+          //           that.province = datas.province
+          //           that.city = datas.city
+          //           that.weather = datas.weather
+          //           that.win = datas.winddirection
+          //           that.windpower = datas.windpower
+          //           that.reporttime = datas.reporttime
+          //         },
+          //         error: function (err) {
+          //           console.log("这是请求失败的");
+          //         }
+          //       })
+
+          //从onenet平台获取数据
+          var devicesid = '624519850' //设备id
+          var apikey = '2oc6=0XgNsKFW8XVsGcpSJmdlL0=' //
+          var api = new OneNetApi(apikey);
+          /**
+           * 读取设备多个数据流
+           * api.getDataStreams(设备id)
+           * */
+          api.getDataStreams(devicesid).done(function (data) {
+            console.log('数据请求成功，服务器返回data为：', data);
+            var tempdatas = data.data[0];
+            var humdatas = data.data[1];
+            var luxdatas = data.data[2];
+            var tem = tempdatas.current_value
+            $("#temp").text('' + tem + '℃');
+            var hum = humdatas.current_value
+            $("#hum").text('' + hum + '%');
+            var lux = parseInt(luxdatas.current_value)
+            $("#lux").text('' + lux + 'Lux');
+            //vue写法
+            // vm.tem =tempdatas.current_value
+            // vm.hum = humdatas.current_value
+            // vm.lux = parseInt(luxdatas.current_value)
+          });
+
+          $("#kt").on('click', function () {
+            clickSwitch()
+          });
+          $("#ws").on('click', function () {
+            clickSwitch1()
+          });
+          $("#fs").on('click', function () {
+            clickSwitch2()
+          });
+          //控制客厅灯
+          var clickSwitch = function () {
+            if ($("#kt").is(':checked')) {
+              console.log("在ON的状态下");
+              api.sendCommand(devicesid, '111').done(function (data) {
+                console.log('api调用完成，服务器返回data为：', data);
+                if (data.errno == 10){
+                  alert('设备不在线')
+                }else{
+                  console.log('成功');
+                }
+              });
+            } else {
+              console.log("在OFF的状态下");
+              api.sendCommand(devicesid, '110').done(function (data) {
+                console.log('api调用完成，服务器返回data为：', data);
+              });
+            }
+          };
+          //控制卧室灯
+          var clickSwitch1 = function () {
+            if ($("#ws").is(':checked')) {
+              console.log("卧室灯打开");
+              api.sendCommand(devicesid, '121').done(function (data) {
+                console.log('api调用完成，服务器返回data为：', data);
+                if (data.errno == 10){
+                  alert('设备不在线')
+                }else{
+                  console.log('成功');
+                }
+              });
+            } else {
+              console.log("卧室灯关闭");
+              api.sendCommand(devicesid, '120').done(function (data) {
+                console.log('api调用完成，服务器返回data为：', data);
+              });
+            }
+          };
+          // 控制风扇
+          var clickSwitch2 = function () {
+            if ($("#fs").is(':checked')) {
+              console.log("风扇打开");
+              api.sendCommand(devicesid, '131').done(function (data) {
+                console.log('api调用完成，服务器返回data为：', data);
+                if (data.errno == 10){
+                  alert('设备不在线')
+                }else{
+                  console.log('成功');
+                }
+              });
+            } else {
+              console.log("风扇关闭");
+              api.sendCommand(devicesid, '130').done(function (data) {
+                console.log('api调用完成，服务器返回data为：', data);
+              });
+            }
+          };
+        }
+      }
+    });
+  </script>
+
+
+
+  <!-- <script>
+    $(function () {
+      const devicesid = '624519850' //设备id
+      const datastreams = 'temperature,humidity,illumination' //数据流ID
+      const apikey = '2oc6=0XgNsKFW8XVsGcpSJmdlL0=' //
+      var api = new OneNetApi(apikey);
+      /**
+       * 读取设备多个数据流
+       * api.getDataStreams(设备id)
+       * */
+      api.getDataStreams(devicesid).done(function (data) {
+        console.log('api调用完成，服务器返回data为：', data);
+      });
+      /**
+       * 获取数据点
+       * api.getDataPoints(设备id, 参数)
+       * 参数为一个json对象，可以设置各个读取参数，参数列表参考http://open.iot.10086.cn/apidoc/datapoint/view.html
+       * */
+      // api.getDataPoints(624519850, {datastream_id:'temperature'}).done(function(data){
+      //     console.log('api调用完成，服务器返回data为：', data);
+      // });
+      /**
+       * 发送命令
+       * api.sendCommand(设备id, 命令内容) 命令内容参考http://open.iot.10086.cn/apidoc/cmd/create.html
+       * */
+      // var api = new OneNetApi('geh3sTZLbE=6INlp0cjQlLIoMfA=');
+      // api.sendCommand(680817, '100').done(function (data) {
+      //   console.log('api调用完成，服务器返回data为：', data);
+      // });
+    })
+  </script> -->
+
+</body>
+
+</html>

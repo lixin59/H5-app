@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史数据</title>
+    <link rel="stylesheet" href="./css/history.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/swiper.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+
+</head>
+
+<body>
+    <!-- 头部区域 -->
+    <header class="header">历史数据</header>
+
+
+    <div id="app">
+        <div class="box">
+            <div class="serchbox">
+                <label for="">请输入开始时间</label>
+                <div class="serch">
+                    <input type="text" id="starTime" placeholder="如 2020-10-01">
+                </div>
+            </div>
+            <div class="serchbox">
+                <label for="">请输入查询数据的数量</label>
+                <div class="serch">
+                    <input type="text" id="endTime" placeholder="输入数字的范围 0-6000">
+                </div>
+            </div>
+            <div class="btnbox">
+                <span class="button" id="select">
+                    查询
+                </span>
+                <span class="button" id="refresh" @click="refresh">
+                    刷新
+                </span>
+                <span class="button" @click="changeType">
+                    切换图表
+                </span>
+            </div>
+        </div>
+        <ve-chart :data="tempData" :extend="extend" :colors="colors" :settings="chartSettings"></ve-chart>
+        <ve-chart :data="humData" :colors="colors1" :settings="chartSettings"></ve-chart>
+        <ve-chart :data="luxData" :colors="colors2" :settings="chartSettings" style="margin-bottom: 30px;"></ve-chart>
+    </div>
+
+    <!-- 底部 -->
+    <footer class="footer">
+        <a href="./index1.html" class="item">
+            <img src="./icons/home.png" alt="" />
+            <p>首页</p>
+        </a>
+        <a href="#" class="item">
+            <img src="./icons/net2.png" alt="" />
+            <p style="color: rgb(11, 194, 194);">历史数据</p>
+        </a>
+        <a href="./user.html" class="item">
+            <img src="./icons/user.png" alt="" />
+            <p>我的</p>
+        </a>
+    </footer>
+    <script src="./js/swiper.min.js"></script>
+    <script src="./js/flexible.js"></script>
+    <script src="./js/sdk.js"></script>
+    <script src="./js/jQuery.js"></script>
+
+    <script>
+    </script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                this.typeArr = ['line', 'histogram', 'bar', 'pie', 'ring']
+                this.index = 0
+                this.chartSettings = {
+                    type: this.typeArr[this.index],
+                    xAxisAalign: 'center'
+                }
+                this.extend = {
+                    // //x轴文本设置
+                    // 'xAxis.0.axisLabel.rotate': 45, //x轴文本倾斜
+                    // 'xAxis.0.axisLine.lineStyle.color': "red",//x轴文本改变颜色
+                    // 'xAxis.0.axisLabel.color': 'red', //x轴文本颜色
+                    // 'xAxis.0.axisLabel.fontSize': 16, //x轴文本字体大小
+                    // 'xAxis.0.axisLabel.fontFamily': 'Arial', //x轴文本字体系列
+                    // 'xAxis.0.axisLabel.fontWeight': 'bold', //x轴文本字体粗细
+                    // 'xAxis.0.axisLabel.align': 'center', //x轴文本字体位置
+                }
+                this.colors = ["#00FA9A",
+                    "#f67287",
+                    "#00FF00",
+                    "#f29e3c",
+                    "#c05bdd",
+                    "#f29e3c",
+                    "#7a65f2",
+                    "#65d186",
+                    "#f67287"
+                ]
+                this.colors1 = ["#00BFFF",
+                    "#f67287",
+                    "#f29e3c",
+                    "#c05bdd",
+                    "#f29e3c",
+                    "#00FF00",
+                    "#7a65f2",
+                    "#65d186",
+                    "#f67287"
+                ]
+                this.colors2 = ["#FFA500",
+                    "#f67287",
+                    "#f29e3c",
+                    "#c05bdd",
+                    "#f29e3c",
+                    "#7a65f2",
+                    "#00FF00",
+                    "#65d186",
+                    "#f67287"
+                ]
+                return {
+                    tempData: {},
+                    humData: {},
+                    luxData: {},
+                    chartSettings: {
+                        type: this.typeArr[this.index]
+                    }
+                }
+            },
+            mounted() {
+                this.init()
+            },
+            methods: {
+                init() {
+                    let that = this
+                    console.log('s' + that);
+                    //从onenet平台获取数据
+                    var devicesid = '624519850' //设备id
+                    var apikey = '2oc6=0XgNsKFW8XVsGcpSJmdlL0=' //
+                    var api = new OneNetApi(apikey);
+                    // var startime
+                    // var limitNum
+
+                    // 获取温度的数据节点
+                    api.getDataPoints(devicesid, {
+                        datastream_id: 'temperature',
+                        start: '2020-10-01T08:00:35',
+                        limit: 6000
+                    }).done(function (data) {
+                        console.log('api调用完成，服务器返回data为：', data);
+                        var temp = data.data.datastreams[0].datapoints
+                        for (let i in temp) {
+                            temp[i].at = temp[i].at.slice(5, -4); // 去掉时间，保留日期
+                        }
+                        console.log(temp);
+                        var temp1 = JSON.parse(JSON.stringify(temp).replace(/at/g, '日期')) //修改数组里面对象的属性名
+                        var temp2 = JSON.parse(JSON.stringify(temp1).replace(/value/g, '温度'))
+                        console.log(temp2[0]);
+                        var tempData = {
+                            columns: ['日期', '温度'],
+                            rows: temp2,
+                        }
+                        console.log(tempData);
+                        that.tempData = tempData
+                    });
+                    //获取湿度的数据节点
+                    api.getDataPoints(devicesid, {
+                        datastream_id: 'humidity',
+                        start: '2020-10-01T08:00:35',
+                        limit: 6000
+                    }).done(function (data) {
+                        console.log('api调用完成，服务器返回data为：', data);
+                        var datas = data.data.datastreams[0].datapoints
+                        for (let i in datas) {
+                            datas[i].at = datas[i].at.slice(5, -4); // 去掉时间，保留日期
+                        }
+                        var datas1 = JSON.parse(JSON.stringify(datas).replace(/at/g,
+                            '日期')) //修改数组里面对象的属性名
+                        var datas2 = JSON.parse(JSON.stringify(datas1).replace(/value/g, '湿度'))
+                        var humData = {
+                            columns: ['日期', '湿度'],
+                            rows: datas2,
+                        }
+                        that.humData = humData
+                    });
+                    //获取光照度的数据节点
+                    api.getDataPoints(devicesid, {
+                        datastream_id: 'illumination',
+                        start: '2020-10-01T08:00:35', //数据点开始时间
+                        limit: 6000
+                    }).done(function (data) {
+                        console.log('api调用完成，服务器返回data为：', data);
+                        var datas = data.data.datastreams[0].datapoints
+                        for (let i in datas) {
+                            datas[i].at = datas[i].at.slice(5, -4); // 去掉时间，保留日期
+                        }
+                        var datas1 = JSON.parse(JSON.stringify(datas).replace(/at/g,
+                            '日期')) //修改数组里面对象的属性名
+                        var datas2 = JSON.parse(JSON.stringify(datas1).replace(/value/g, '光照度'))
+                        var luxData = {
+                            columns: ['日期', '光照度'],
+                            rows: datas2,
+                        }
+                        that.luxData = luxData
+                    });
+                    // 点击查询按钮。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。
+                    $("#select").click(function () {
+                        let startime = $("#starTime").val() + 'T08:00:35';
+                        let limitNum = $("#endTime").val();
+                        console.log(startime, limitNum);
+                        if (startime === '' || limitNum === '') {
+                            alert('请输入查询信息')
+                        } else {
+                            // 获取温度的数据节点
+                            api.getDataPoints(devicesid, {
+                                datastream_id: 'temperature',
+                                start: startime,
+                                limit: limitNum
+                            }).done(function (data) {
+                                console.log('api调用完成，服务器返回data为：', data);
+                                var temp = data.data.datastreams[0].datapoints
+                                for (let i in temp) {
+                                    temp[i].at = temp[i].at.slice(5, -4); // 去掉时间，保留日期
+                                }
+                                console.log(temp);
+                                var temp1 = JSON.parse(JSON.stringify(temp).replace(/at/g,
+                                    '日期')) //修改数组里面对象的属性名
+                                var temp2 = JSON.parse(JSON.stringify(temp1).replace(/value/g,
+                                    '温度'))
+                                console.log(temp2[0]);
+                                var tempData = {
+                                    columns: ['日期', '温度'],
+                                    rows: temp2,
+                                }
+                                console.log(tempData);
+                                that.tempData = tempData
+                            });
+                            //获取湿度的数据节点
+                            api.getDataPoints(devicesid, {
+                                datastream_id: 'humidity',
+                                start: startime,
+                                limit: limitNum,
+                            }).done(function (data) {
+                                console.log('api调用完成，服务器返回data为：', data);
+                                var datas = data.data.datastreams[0].datapoints
+                                for (let i in datas) {
+                                    datas[i].at = datas[i].at.slice(5, -4); // 去掉时间，保留日期
+                                }
+                                var datas1 = JSON.parse(JSON.stringify(datas).replace(/at/g,
+                                    '日期')) //修改数组里面对象的属性名
+                                var datas2 = JSON.parse(JSON.stringify(datas1).replace(/value/g,
+                                    '湿度'))
+                                var humData = {
+                                    columns: ['日期', '湿度'],
+                                    rows: datas2,
+                                }
+                                that.humData = humData
+                            });
+                            //获取光照度的数据节点
+                            api.getDataPoints(devicesid, {
+                                datastream_id: 'illumination',
+                                start: startime,
+                                limit: limitNum
+                            }).done(function (data) {
+                                console.log('api调用完成，服务器返回data为：', data);
+                                var datas = data.data.datastreams[0].datapoints
+                                for (let i in datas) {
+                                    datas[i].at = datas[i].at.slice(5, -4); // 去掉时间，保留日期
+                                }
+                                var datas1 = JSON.parse(JSON.stringify(datas).replace(/at/g,
+                                    '日期')) //修改数组里面对象的属性名
+                                var datas2 = JSON.parse(JSON.stringify(datas1).replace(/value/g,
+                                    '光照度'))
+                                var luxData = {
+                                    columns: ['日期', '光照度'],
+                                    rows: datas2,
+                                }
+                                that.luxData = luxData
+                            });
+                        }
+                    });
+                },
+                //刷新按钮
+                refresh() {
+                    this.init();
+                    this.chartSettings = {
+                        type: this.typeArr[0]
+                    }
+                    $("#starTime").val('');
+                    $("#endTime").val('');
+                },
+                //切换图表
+                changeType() {
+                    // let that = this
+                    // console.log(that);
+                    this.index++
+                    if (this.index >= this.typeArr.length) {
+                        this.index = 0
+                    }
+                    this.chartSettings = {
+                        type: this.typeArr[this.index]
+                    }
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
